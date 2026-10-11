@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Enlazar con Sintonía</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--ink:#0b1020;--panel:#151c33;--line:#26304f;--text:#eef1fa;--mute:#9aa3bd;--signal:#ffc247}
+*{box-sizing:border-box;margin:0}
+body{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(60% 50% at 50% 0,#1b2547,var(--ink));color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{width:100%;max-width:400px;display:grid;gap:18px;text-align:center}
+h1{font-size:26px;letter-spacing:-.01em}
+.bars{width:56px;height:5px;border-radius:3px;margin:8px auto 0;background:linear-gradient(90deg,#f5f5f5 0 14%,#ffd400 14% 28%,#00d5e8 28% 42%,#22c55e 42% 57%,#e040fb 57% 71%,#ef4444 71% 85%,#3b5bff 85%)}
+.code{font-size:34px;font-weight:800;letter-spacing:.12em;padding:12px;border:2px dashed var(--signal);border-radius:16px;color:var(--signal);font-variant-numeric:tabular-nums}
+.btn{display:block;padding:15px;border-radius:14px;background:var(--signal);color:#1a1300;font-weight:700;font-size:17px;text-decoration:none}
+.btn.alt{background:var(--panel);color:var(--text);border:1px solid var(--line)}
+p{color:var(--mute)}
+</style>
+</head>
+<body>
+<main>
+  <div><h1>Enlazar con Sintonía</h1><div class="bars"></div></div>
+  <p id="lead">Abriendo Sintonía en este móvil…</p>
+  <div class="code" id="code">····-····</div>
+  <a class="btn" id="open" href="#">Abrir en Sintonía</a>
+  <p>Si no se abre, abre Sintonía y ve a Ajustes → «Enlazar una tele», y escribe el código de arriba.</p>
+  <a class="btn alt" href="https://github.com/andyelectricidad-dotcom/sintonia-descargas/releases/tag/android-latest">¿No tienes la app? Descárgala</a>
+</main>
+<script>
+(function () {
+  var c = (location.hash || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 8);
+  var lead = document.getElementById('lead'), btn = document.getElementById('open');
+  if (c.length !== 8) { lead.textContent = 'Este enlace no tiene un código válido. Vuelve a escanear el QR de la tele.'; btn.style.display = 'none'; return; }
+  document.getElementById('code').textContent = c.slice(0, 4) + '-' + c.slice(4);
+  var android = /Android/i.test(navigator.userAgent);
+  var url = android
+    ? 'intent://enlazar/' + c + '#Intent;scheme=sintonia;package=com.sintonia.iptv;end'
+    : 'sintonia://enlazar/' + c;
+  btn.href = url;
+  if (android) setTimeout(function () { location.href = url; }, 150);
+  else lead.textContent = 'Abre este enlace en el móvil Android donde tienes Sintonía, o escribe el código en la app.';
+})();
+</script>
+</body>
+</html>
